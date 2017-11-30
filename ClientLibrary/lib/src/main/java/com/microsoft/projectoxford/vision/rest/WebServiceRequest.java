@@ -51,6 +51,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 
 public class WebServiceRequest {
     private static final String headerKey = "ocp-apim-subscription-key";
@@ -85,9 +86,13 @@ public class WebServiceRequest {
         try {
             HttpResponse response = this.client.execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
+
+            if (statusCode == 200)
+            {
                 return readInput(response.getEntity().getContent());
-            } else {
+
+            } else
+            {
                 throw new Exception("Error executing GET request! Received error code: " + response.getStatusLine().getStatusCode());
             }
         } catch (Exception e) {
@@ -137,6 +142,7 @@ public class WebServiceRequest {
 
             HttpResponse response = this.client.execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
+
             if (statusCode == 200) {
                 if(!responseInputStream) {
                     return readInput(response.getEntity().getContent());

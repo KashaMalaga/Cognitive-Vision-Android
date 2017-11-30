@@ -44,15 +44,15 @@ import com.microsoft.projectoxford.vision.rest.VisionServiceException;
 import com.microsoft.projectoxford.vision.rest.WebServiceRequest;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import android.text.TextUtils;
 
 public class VisionServiceRestClient implements VisionServiceClient {
-    private static final String DEFAULT_API_ROOT = "https://westus.api.cognitive.microsoft.com/vision/v1.0";
+    private static final String DEFAULT_API_ROOT = "https://westeurope.api.cognitive.microsoft.com/vision/v1.0";
     private final String apiRoot;
     private final WebServiceRequest restCall;
     private Gson gson = new Gson();
@@ -74,11 +74,12 @@ public class VisionServiceRestClient implements VisionServiceClient {
 
         String path = apiRoot + "/analyze";
         String uri = WebServiceRequest.getUrl(path, params);
-
+        //System.out.println("Analyse 1:"+uri.toString());
         params.clear();
         params.put("url", url);
 
         String json = (String) this.restCall.request(uri, "POST", params, null, false);
+       // System.out.println("Analyse 1:"+json.toString());
         AnalysisResult visualFeature = this.gson.fromJson(json, AnalysisResult.class);
 
         return visualFeature;
@@ -91,12 +92,13 @@ public class VisionServiceRestClient implements VisionServiceClient {
         AppendParams(params, "details", details);
         String path = apiRoot + "/analyze";
         String uri = WebServiceRequest.getUrl(path, params);
-
+      //  System.out.println("Analyse 2:"+uri.toString());
         params.clear();
         byte[] data = IOUtils.toByteArray(stream);
         params.put("data", data);
 
         String json = (String) this.restCall.request(uri, "POST", params, "application/octet-stream", false);
+        //System.out.println("Analyse 2:"+json.toString());
         AnalysisResult visualFeature = this.gson.fromJson(json, AnalysisResult.class);
 
         return visualFeature;
@@ -300,7 +302,7 @@ public class VisionServiceRestClient implements VisionServiceClient {
 
     private void AppendParams(Map<String, Object> params, String name, String[] args) {
         if(args != null && args.length > 0) {
-            String features = StringUtils.join(args, ',');
+            String features = TextUtils.join(",",args);
             params.put(name, features);
         }
     }
